@@ -1,0 +1,36 @@
+<div class="jumbotron">
+<h1>Welcome </h1>
+
+
+{{#if isUser}}
+    <div class="container text-center my-3">
+        <div class="jumbotron" style="background-color: green;color: white;">
+    
+            <h2><i>Bienvenido {{user.email}}</i></h2>
+            <br>
+            <form action="/logout">
+                <div class="text-center"></div>
+                    <button class="btn btn-danger my-5">LOGOUT</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{{/if}}
+
+
+<form action="/login">
+    <div>
+        <input type="submit" value="Login">
+    </div>
+</form>
+
+OR
+
+<form action="/signup">
+    <div>
+        <input type="submit" value="Signup">
+    </div>
+</form>
+
+
+</div>
