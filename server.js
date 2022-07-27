@@ -197,7 +197,7 @@ const options = { default: { puerto: "8080", modo: "FORK" }, alias: { m: 'modo',
 
 
 const args = parseArgs(process.argv.slice(2), options);
-PORT = args.puerto;
+const PORT = args.puerto || 8080;
 console.log(PORT);
 console.log(args.modo);
 if (args.modo === 'FORK') {
