@@ -4,6 +4,18 @@ const log4js = require("log4js");
 
 
 
+
+const fs = require('fs'); 
+
+
+const {carritoDaoMongo} = require('../daos/carritos/carritoDaoMongo')
+const {productoDaoMongo} = require('../daos/productos/productoDaoMongo');
+
+const producto = new productoDaoMongo();
+const carrito = new carritoDaoMongo();
+
+
+
 log4js.configure({
     appenders: {
         console: { type: "console" },
@@ -165,6 +177,19 @@ function getRandoms(req, res) {
 
 }
 
+async function getCarrito(req, res) {
+    let carritoLista = await carrito.getAll()
+    res.render('carrito',{carrito:carritoLista});
+}
+
+async function getProductos(req, res){
+ //producto.save({nombre:"Heladera",precio:123,url: "notFound",fecha:new Date()})
+    let lista= await producto.getAll()
+   // console.log(lista);
+    //res.send(lista)
+   res.render('productos',{productos:lista});
+}
+
 module.exports = {
     getRoot,
     getLogin,
@@ -180,4 +205,6 @@ module.exports = {
     getTwitterPage,
     getInfo,
     getRandoms,
+    getProductos,
+    getCarrito,
 }

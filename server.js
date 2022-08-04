@@ -7,6 +7,14 @@ const UserModel = require("./src/models/usuarios");
 
 const { fork } = require('child_process');
 
+const fs = require('fs');  
+
+
+const nodemailer = require('nodemailer')
+const TEST_MAIL ="deangelo.prosacco31@ethereal.email"
+const twilio = require('twilio');
+
+
 //const TwitterUserModel = require("./src/models/twitterUsuario");
 //const mongoStore = require('connect-mongo')
 const { TIEMPO_EXPIRACION, secret } = require("./src/config/globals");
@@ -26,11 +34,77 @@ const mongoose = require("mongoose");
 
 const parseArgs = require('minimist');
 const compression = require('compression');
+const { log } = require("console");
 
 const app = express();
 ///////////////////////////////////////////
+const {Router} = express;
+const routerP= Router();
+const routerC= Router();
+app.use('/productos', routerP);
+app.use('/carrito', routerC);
 
 ///////////////////////////////////////////////////////
+
+const transporter = nodemailer.createTransport({
+    host: 'smtp.ethereal.email',
+    port: 587,
+    auth: {
+        user: TEST_MAIL,
+        type: 'OAuth2',
+        clientId:'958196475288-8pt0cpvohleh6p2lhib76b3mnqs0g6sd.apps.googleusercontent.com',
+        clientSecret: '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',
+        refreshToken:'?',
+       accessToken:'?'
+    }
+});
+
+const mailOptions = {
+    from: 'Servidor de eccomerce node.js',
+    to:TEST_MAIL,
+    subject: 'Nuevo usuario',
+    html:'<h3 style="color: blue"> Mail test desde node</h3>'
+
+}
+
+
+async function sendMail(object){
+try {
+    const info = await transporter.sendMail(object)
+    console.log(info);
+} catch (error) {
+    console.log(error);
+}
+}
+
+////////////
+const accountSid = 'AC80e7be066f54540f05a1e56fa44c69b6';
+const authToken = 'a5b0b07fa7c07deb78b7e185bb0c17b9';
+
+const client = twilio(accountSid, authToken)
+
+const msj={
+    body: 'mensajes desde node',
+    from: 'whatsapp:+14155238886',
+    to: 'whatsapp:+5493416721758'
+}
+
+const msj={
+    body: 'mensajes desde node',
+    from: 'whatsapp:+14155238886',
+    to: 'whatsapp:+5493416721758'
+}
+
+async function sendWhatsApp(obj){
+    try {
+        await client.messages.create(obj)
+        console.log('Created message');
+    } catch (error) {
+        console.log(error);
+    }
+
+}
+/////////////
 app.use(compression());
 
 
@@ -134,6 +208,8 @@ passport.deserializeUser((id, done) => {
     UserModel.findById(id, done);
 });
 
+app.use(express.json());
+app.use(express.urlencoded({extended:true}))
 
 ///////////////////////////////////////////
 
@@ -152,7 +228,7 @@ app.get("/faillogin", routes.getFailLogin);
 app.get('/signup', routes.getSignup);
 app.post('/signup', passport.authenticate('signup',
     { failureRedirect: "/failsignup" }
-), routes.postSignup);
+), routes.postSignup,sendMail(mailOptions));
 
 app.get('/failsignup', routes.getFailSignup);
 
@@ -186,7 +262,112 @@ res.end(numeros.toString());
 })
 
 
+//////////////////////
 
+
+routerP.get('/', routes.getProductos);
+routerC.get('/', routes.getCarrito);
+  
+//  routerP.get('/:id',async(req,res)=> {
+//     let id= req.params.id;
+//         if ( await producto.getById(id)==null) {
+//             res.json({
+//                 error : 'Producto no encontrado'})
+              
+//         } else {
+//             let found = await producto.getById(id);
+//             res.json({
+//                 result: 'Este es el producto', 
+//                 Producto : found})
+//         } 
+//     });
+
+//     routerP.post('/',async (req,res)=>{
+//             let obj= req.body;
+//             // crep que no me esta tomando el req.body
+//             //les saque los required porque me crasheaba
+//                 await producto.save(obj);
+//                 res.json({ 
+//                     result : 'Producto guardado',
+//                     body:req.body,
+//                         });
+//         } );
+
+//     routerP.put('/:id',async (req,res)=>{
+//                 let id= req.params.id; 
+//                 await producto.update(id,req.body);
+//                 res.json({
+//                     body:req.body,
+//                     result:'Edit exitoso',
+//                     id : req.params.id
+//             })
+//         });
+//     routerP.delete('/:id',(req,res)=>{
+         
+//             let id= req.params.id; 
+//             producto.delete(id);
+//             res.json({
+//             result:'Producto eliminado',
+//             id : req.params.id,
+//             })
+//     });
+
+////////////////////////////
+
+
+         /*/
+    
+         routerC.get('/:id',async(req,res)=> {
+            let id= req.params.id;
+                if ( await carrito.getById(id)==null) {
+                    res.json({
+                        error : 'Carrito no encontrado'})
+                      
+                } else {
+                    let found = await carrito.getById(id);
+                    res.json({
+                        result: 'Este es el carrito', 
+                        Producto : found})
+                } 
+            });
+    
+            routerC.post('/',async (req,res)=>{
+                    let obj= req.body;
+
+                        await carrito.save(obj);
+                        res.json({ 
+                            result : 'carrito guardado',
+                            body:req.body,
+                                });
+                } );
+    
+            routerC.put('/:id',async (req,res)=>{
+                        let id= req.params.id; 
+                        await carrito.update(id,req.body);
+                        res.json({
+                            body:req.body,
+                            result:'Edit exitoso',
+                            id : req.params.id
+                    })
+                });
+
+            routerC.delete('/:id',(req,res)=>{
+                 
+                    let id= req.params.id; 
+                    carrito.delete(id);
+                    res.json({
+                    result:'Carrito eliminado',
+                    id : req.params.id,
+                    })
+            });
+
+/*/
+
+
+
+
+
+///////////////////////
 app.get("*", routes.failRoute);
 
 
@@ -197,7 +378,8 @@ const options = { default: { puerto: "8080", modo: "FORK" }, alias: { m: 'modo',
 
 
 const args = parseArgs(process.argv.slice(2), options);
-const PORT = process.env.PORT || 8080;
+const PORT = args.puerto || 8080;
+//const PORT = process.env.PORT || 8080;
 console.log(PORT);
 console.log(args.modo);
 if (args.modo === 'FORK') {
@@ -205,7 +387,7 @@ if (args.modo === 'FORK') {
         console.log("Server on port " + PORT + ' modo ' + args.modo);
     });
 
-    server.on("error", (error) => console.log("Error en el servidor"));
+    server.on("error", (error) => console.log("Error en el servidor"+error));
 } else if (args.modo === 'CLUSTER') {
     if (cluster.isMaster) {
         console.log('PID Master ' + process.pid);
