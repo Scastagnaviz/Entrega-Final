@@ -6,6 +6,7 @@ const carritoCollection = 'carrito';
 const carritoSchema = new mongoose.Schema({
     nombre :{type:Array, required:true, max:100},
     fecha:{type:Date,required:true},
+    productos:{type:Array, required:true}
   
 })
 
@@ -41,7 +42,7 @@ class carritoDaoMongo extends contenedorMongo{
         }) 
         return console.log('Mongo:Producto actulizado') 
     }
-}
+}   
 
 
 

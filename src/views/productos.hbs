@@ -20,15 +20,26 @@
 </tr>
 </thead>
 <tbody>
-    {{#each productos}}
+{{!-- {{#if listExists}}
+
+    {{#each productos}} --}}
     <tr>   
          <td>{{this.nombre}}</td>
          <td>{{this.precio}}</td>
          <td> <img src="{{this.url}}" alt="noToy"></td> 
+           <td><form action="/addTocarrito" method="get">
+        
+        <button class="btn btn-danger my-5">agregar producto a carrito</button>
+        
+        </form></td>
     </tr>
-    {{/each}}
+    {{!-- {{/each}} --}}
+  
+
   </tbody>
-{{/if}}
+{{!-- {{/if}} --}}
+</table>
+
 </body>
 </html>
 

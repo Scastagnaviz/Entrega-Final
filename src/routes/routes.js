@@ -178,16 +178,32 @@ function getRandoms(req, res) {
 }
 
 async function getCarrito(req, res) {
-    let carritoLista = await carrito.getAll()
+    let carritoSaved={
+        nombre:'carrit1',
+        fecha: new Date().toLocaleString(),
+       productos: [{nombre:'heladera'}, {nombre:'heladera2'}, {nombre:'heladera3'}]};
+    carrito.save(carritoSaved)
+    let carritoLista = await carrito.getAll();
     res.render('carrito',{carrito:carritoLista});
 }
 
 async function getProductos(req, res){
- //producto.save({nombre:"Heladera",precio:123,url: "notFound",fecha:new Date()})
+ producto.save({nombre:"Heladera",precio:123,url: "notFound",fecha:new Date()})
     let lista= await producto.getAll()
    // console.log(lista);
     //res.send(lista)
-   res.render('productos',{productos:lista});
+   res.render('productos',{productos:lista,listExists:true});
+}
+
+async function addProductoCarrito(req, res){
+    let id= req.params.id; 
+    
+            let obj = producto.getProdByiD(idP);
+            carrito.AddProdCarrito(id,obj)
+            res.json({
+                result: 'Producto agregado', 
+                Producto : obj})
+    
 }
 
 module.exports = {
@@ -207,4 +223,5 @@ module.exports = {
     getRandoms,
     getProductos,
     getCarrito,
+    addProductoCarrito
 }

@@ -11,7 +11,7 @@ const fs = require('fs');
 
 
 const nodemailer = require('nodemailer')
-const TEST_MAIL ="deangelo.prosacco31@ethereal.email"
+const TEST_MAIL ="sienna.purdy@ethereal.email"
 const twilio = require('twilio');
 
 
@@ -35,6 +35,7 @@ const mongoose = require("mongoose");
 const parseArgs = require('minimist');
 const compression = require('compression');
 const { log } = require("console");
+const { send } = require("process");
 
 const app = express();
 ///////////////////////////////////////////
@@ -50,27 +51,23 @@ const transporter = nodemailer.createTransport({
     host: 'smtp.ethereal.email',
     port: 587,
     auth: {
-        user: TEST_MAIL,
-        type: 'OAuth2',
-        clientId:'958196475288-8pt0cpvohleh6p2lhib76b3mnqs0g6sd.apps.googleusercontent.com',
-        clientSecret: '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',
-        refreshToken:'?',
-       accessToken:'?'
+        user: 'sienna.purdy@ethereal.email',
+        pass: 'jmvVRa4zKGAuzNgnyZ'
     }
 });
 
-const mailOptions = {
-    from: 'Servidor de eccomerce node.js',
-    to:TEST_MAIL,
-    subject: 'Nuevo usuario',
-    html:'<h3 style="color: blue"> Mail test desde node</h3>'
-
-}
 
 
-async function sendMail(object){
+async function sendMail(obj){
+    const mail = {
+        from: 'Servidor de eccomerce node.js'+obj,
+        to:TEST_MAIL,
+        subject: 'Nuevo usuario',
+        html:'<h3 style="color: blue"> Mail test desde node</h3>',
+    
+    }
 try {
-    const info = await transporter.sendMail(object)
+    const info = await transporter.sendMail(mail)
     console.log(info);
 } catch (error) {
     console.log(error);
@@ -79,7 +76,7 @@ try {
 
 ////////////
 const accountSid = 'AC80e7be066f54540f05a1e56fa44c69b6';
-const authToken = 'a5b0b07fa7c07deb78b7e185bb0c17b9';
+const authToken = 'd0c12bf57637596411040ae2e23c7157';
 
 const client = twilio(accountSid, authToken)
 
@@ -89,15 +86,15 @@ const msj={
     to: 'whatsapp:+5493416721758'
 }
 
-const msj={
-    body: 'mensajes desde node',
-    from: 'whatsapp:+14155238886',
-    to: 'whatsapp:+5493416721758'
-}
 
 async function sendWhatsApp(obj){
+    const msj={
+        body: 'mensajes desde node '+ obj,
+        from: 'whatsapp:+14155238886',
+        to: 'whatsapp:+5493416721758',
+    }
     try {
-        await client.messages.create(obj)
+        await client.messages.create(msj)
         console.log('Created message');
     } catch (error) {
         console.log(error);
@@ -194,6 +191,15 @@ passport.use(
                 }
                 console.log(userWithId);
                 console.log("Registro Existoso");
+
+                const mailSignup = {
+                    from: 'Servidor de eccomerce node.js',
+                    to:TEST_MAIL,
+                    subject: 'Nuevo usuario',
+                    html:'<h3 style="color: blue"> Registro exitoso desde node</h3>',
+                
+                }
+                sendMail(mailSignup)
                 return done(null, userWithId);
             });
         });
@@ -225,10 +231,11 @@ app.post(
 app.get("/faillogin", routes.getFailLogin);
 
 ////
+
 app.get('/signup', routes.getSignup);
 app.post('/signup', passport.authenticate('signup',
     { failureRedirect: "/failsignup" }
-), routes.postSignup,sendMail(mailOptions));
+), routes.postSignup);
 
 app.get('/failsignup', routes.getFailSignup);
 
@@ -261,6 +268,13 @@ res.end(numeros.toString());
     //     res.end(` ${nums}`)
 })
 
+app.get("/sendWhatsApp", (req, res) =>{
+    let obj = {producto:'Heladera'}
+    sendWhatsApp(obj)
+    sendMail(obj);
+   console.log('pedido realido con exito!');
+    res.redirect("/profile");
+})
 
 //////////////////////
 

@@ -1,38 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    {{!-- <script src="../../server.js"></script> --}}
 </head>
+
 <body>
-      {{>nav}}
-{{#if isUser}}
-  
+    {{>nav}}
+    {{#if isUser}}
+
     <h2>Mi carrito</h2>
-<table class="table">
+    <table class="table">
 
-    <thead>
-<tr>
-    <th scope="col">Producto</th>
-    <th scope="col">Precio</th>
-    <th scope="col">Link</th>
-</tr>
-</thead>
-<tbody>
-    {{#each carrito}}
-    <tr>   
-         <td>{{this.nombre}}</td>
-         <td>{{this.precio}}</td>
-         <td> <img src="{{this.url}}" alt="noToy"></td> 
-    </tr>
-    {{/each}}
-  </tbody>
-
-
+        <thead>
+            <tr>
+                <th scope="col">Producto</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Link</th>
+            </tr>
+        </thead>
+        {{!-- <tbody>
+            {{#each carrito}} --}}
+            <tr>
+                {{!-- <td>{{this.nombre}}</td>
+                <td>{{this.fecha}}</td> --}}
+                {{!-- <td> <img src="{{this.url}}" alt="noToy"></td> --}}
+            </tr>
+            {{!-- {{/each}} --}}
+        </tbody>
+      
+    </table>
+    {{/if}}
+      <form action="/sendWhatsApp" method="get">
+        <div class="text-center">
+        <button class="btn btn-danger my-5">Iniciar pedido</button>
+        </div>
+        </form>
 </body>
+
 </html>
-
- </table>
-
