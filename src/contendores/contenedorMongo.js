@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 class contenedorMongo{
 constructor(collection,schema){
-    mongoose.connect('mongodb://localhost:27017/ecommerce',{
+    mongoose.connect('mongodb+srv://SantiagoC:1628@cluster0.nnzkxji.mongodb.net/?retryWrites=true&w=majority',{
         useNewUrlParser: true,
         useUnifiedTopology:true
             })

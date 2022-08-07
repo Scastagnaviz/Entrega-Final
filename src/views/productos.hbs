@@ -8,7 +8,7 @@
 </head>
 <body>
     {{>nav}}
-    {{#if isUser}}
+    {{!-- {{#if isUser}} --}}
     <h2>Lista de productos</h2>
 <table class="table">
 
@@ -20,20 +20,20 @@
 </tr>
 </thead>
 <tbody>
-{{!-- {{#if listExists}}
+{{!-- {{#if listExists}} --}}
 
-    {{#each productos}} --}}
+    {{#each productos}}
     <tr>   
          <td>{{this.nombre}}</td>
          <td>{{this.precio}}</td>
          <td> <img src="{{this.url}}" alt="noToy"></td> 
-           <td><form action="/addTocarrito" method="get">
+           <td><form action="/productos/addTocarrito" method="get">
         
         <button class="btn btn-danger my-5">agregar producto a carrito</button>
         
         </form></td>
     </tr>
-    {{!-- {{/each}} --}}
+    {{/each}}
   
 
   </tbody>

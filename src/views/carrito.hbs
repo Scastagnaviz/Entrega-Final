@@ -11,7 +11,7 @@
 
 <body>
     {{>nav}}
-    {{#if isUser}}
+    {{!-- {{#if isUser}} --}}
 
     <h2>Mi carrito</h2>
     <table class="table">
@@ -23,18 +23,18 @@
                 <th scope="col">Link</th>
             </tr>
         </thead>
-        {{!-- <tbody>
-            {{#each carrito}} --}}
+         <tbody>
+            {{#each carrito}} 
             <tr>
-                {{!-- <td>{{this.nombre}}</td>
-                <td>{{this.fecha}}</td> --}}
-                {{!-- <td> <img src="{{this.url}}" alt="noToy"></td> --}}
+                <td>{{this.nombre}}</td>
+                <td>{{this.fecha}}</td> 
+                <td>{{this.productos}}</td>
             </tr>
-            {{!-- {{/each}} --}}
+            {{/each}}
         </tbody>
       
     </table>
-    {{/if}}
+    {{!-- {{/if}} --}}
       <form action="/sendWhatsApp" method="get">
         <div class="text-center">
         <button class="btn btn-danger my-5">Iniciar pedido</button>

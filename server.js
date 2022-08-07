@@ -281,6 +281,7 @@ app.get("/sendWhatsApp", (req, res) =>{
 
 routerP.get('/', routes.getProductos);
 routerC.get('/', routes.getCarrito);
+routerP.get('/addTocarrito', routes.addProductoCarrito);
   
 //  routerP.get('/:id',async(req,res)=> {
 //     let id= req.params.id;
