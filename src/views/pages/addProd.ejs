@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %>
+</head>
+<body>
+  <%- include('../partials/nav'); %>
+
+
+
+    <div>
+        <h2>Agregar productos</h2>
+  <form action="/productos/addProducto" method="POST">
+            <input type="text" id="nombre" placeholder="Nombre" name="nombre" required />
+            <input type="text" id="precio" placeholder="precio" name="precio" required />
+            <input type="text" id="url" placeholder="url" name="url" required />
+
+<button type="submit">Enviar</button>
+        </form>
+   
+
+    </div>
+</body>
+</html>

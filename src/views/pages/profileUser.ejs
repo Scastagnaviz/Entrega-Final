@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %>
+</head>
+<body>
+  <%- include('../partials/nav'); %>
+    <%if (user) {%>
+        <h2>User Profile</h2>
+        <div class="container text-center my-3">
+            <div class="jumbotron" style="background-color: green;color: white;">
+                <h1>USER OK LOGIN!</h1>
+                <h2><i>Bienvenido <%= user.username%></i></h2>
+                <br>
+                <h1>User info</h1>
+                <h2><%= user.mail %></h2>
+                <form action="/logout">
+                    <div class="text-center"></div>
+                        <button class="btn btn-danger my-5">LOGOUT</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <%}%>
+</body>
+</html>
+
+

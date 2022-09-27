@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %>
+</head>
+<body>
+  <%- include('../partials/nav'); %>
+    <div class="container text-center my-3">
+        <div class="jumbotron" >
+            <h1>USER ERROR SIGNUP</h1>
+    
+            <button class="btn btn-warning my-5" onclick="back()">VOLVER</button>
+        </div>
+    </div>
+    
+    <script>
+        function redirect(pagina) {
+            location.href = pagina;
+        } 
+    
+        function back() {
+            redirect('/')
+        }
+    </script>
+</body>
+</html>

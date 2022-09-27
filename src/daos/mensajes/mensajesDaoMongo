@@ -1,0 +1,50 @@
+const {contenedorMongo} =require('../../contendores/contenedorMongo') 
+
+const mongoose = require('mongoose');
+
+const mensajesCollection = 'mensajes';
+
+const mensajesSchema = new mongoose.Schema({
+username :{type:String,/*/required:true, max:100/*/},
+texto:{type:String,/*/required:true, max:100/*/},
+
+})
+
+
+
+class mensajesDaoMongo extends contenedorMongo{
+constructor(){
+    super(mensajesCollection,mensajesSchema);
+}
+
+async save(obj){
+    await this.model.create(obj);
+    console.log('Mongo:Producto guardado')
+}
+
+async getAll(){
+        return await this.model.find({}); 
+}
+async  getById(id2){
+    return await this.model.find({_id:id2},{})
+}
+
+async  delete(id2){
+    
+        await this.model.deleteOne({_id:id2})
+        return console.log('Mongo:Producto eliminado')
+}
+
+async update(id2,obj){
+    
+    await this.model.updateOne({_id:id2},{
+        $set :{nombre:obj}
+    }) 
+    return console.log('Mongo:Producto actulizado') 
+}
+}
+
+
+
+
+module.exports = {mensajesDaoMongo};

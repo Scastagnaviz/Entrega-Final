@@ -44,8 +44,13 @@ class carritoDaoMongo extends contenedorMongo{
     }
     
     async addProductoCarrito(id2,obj){
-       let carrito = await this.model.find({_id:id2})
-       carrito.productos.push(obj)
+       let carrito = await this.model.find({_id:id2});
+       console.log("carrito "+carrito)
+       JSON.stringify(carrito)
+       console.log("STRING "+carrito)
+       JSON.parse(carrito);
+       console.log("carrito "+carrito)
+      // carrito.productos.push(obj)
        return console.log('Mongo:producto agregado')
     }
 }   

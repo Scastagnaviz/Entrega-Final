@@ -4,12 +4,14 @@ const log4js = require("log4js");
 
 
 
+const messages = [];
+const fs = require('fs');
 
-const fs = require('fs'); 
 
-
-const {carritoDaoMongo} = require('../daos/carritos/carritoDaoMongo')
-const {productoDaoMongo} = require('../daos/productos/productoDaoMongo');
+const { carritoDaoMongo } = require('../daos/carritos/carritoDaoMongo')
+const { productoDaoMongo } = require('../daos/productos/productoDaoMongo');
+const { log } = require('console');
+const { stringify } = require('querystring');
 
 const producto = new productoDaoMongo();
 const carrito = new carritoDaoMongo();
@@ -47,7 +49,9 @@ function getRoot(req, res) {
         res.redirect('profile')
     }
     else {
-        res.render('main')
+        res.render('pages/main', {
+            user: req.user
+        })
     }
 
 }
@@ -58,13 +62,13 @@ function getLogin(req, res) {
         res.redirect('profile')
     }
     else {
-        res.render('login');
+        res.render('pages/login');
     }
 }
 
 function getSignup(req, res) {
     logger.info('Ingreso a /signup')
-    res.render('signup')
+    res.render('pages/signup')
 
 }
 
@@ -73,7 +77,7 @@ function postLogin(req, res) {
         res.redirect('profile')
     }
     else {
-        res.render('login');
+        res.render('pages/login');
     }
 }
 
@@ -82,7 +86,7 @@ function postSignup(req, res) {
         res.redirect('profile')
     }
     else {
-        res.render('login');
+        res.render('pages/login');
     }
 }
 
@@ -90,7 +94,8 @@ function getProfile(req, res) {
     logger.info('Ingreso a /profile')
     if (req.isAuthenticated()) {
         let user = req.user;
-        res.render('profileUser', { user: user, isUser: true })
+        console.log(user);
+        res.render('pages/profileUser', { user: user })
     } else {
         res.redirect('login')
     }
@@ -99,34 +104,34 @@ function getProfile(req, res) {
 function getFailLogin(req, res) {
     errorLogger.error('Ingreso a /failLogin')
     console.log('error de login');
-    res.render('login-error', {})
+    res.render('pages/login-error', {})
 }
 
 function getFailSignup(req, res) {
     errorLogger.error('Ingreso a /failSignup')
     console.log('error de signup {aca?]');
-    res.render('signup-error', {})
+    res.render('pages/signup-error', {})
 }
 
 function getLogout(req, res) {
     logger.info('Ingreso a /logout')
     req.logout((err) => {
         if (!err) {
-            res.render('main')
+            res.render('pages/main', { user: req.user })
         }
     });
 }
 
 function failRoute(req, res) {
     warnLogger.warn('Ingreso a ruta no existente')
-    res.status(404).render('routing-error', {});
+    res.status(404).render('pages/routing-error', {});
 }
 
 function checkAuthentication(req, res, next) {
     if (req.isAuthenticated()) {
         next();
     } else {
-        res.redirect("/login");
+        res.redirect("pages/login");
     }
 }
 
@@ -154,55 +159,44 @@ function getInfo(req, res) {
         carpeta: dir,
         cpu: numCPUs
     }
-    res.render('info', { datos: datos });
+    res.render('pages/info', { datos: datos });
 }
 
-function getRandoms(req, res) {
-    let numeros = 0;
-    if (req.query.n) {
-        numeros = req.query.n;
-    } else { numeros = 100000000 }
-    app.on('request', (req, res) => {
-        let { url } = req;
 
-
-        const randoms = fork('./randoms.js')
-        randoms.send('start');
-        randoms.on('message', sum => {
-            res.render('randoms', { randoms: sum });
-        })
-
-    })
-
-
-}
 
 async function getCarrito(req, res) {
-    let carritoSaved={
-        nombre:'carrit1',
-        fecha: new Date().toLocaleString(),
-       productos: [{nombre:'heladera'}, {nombre:'heladera2'}, {nombre:'heladera3'}]};
+    //aca agregar ffuncion crear carrito
+    let carritoSaved = {
+        nombre: 'carrit1',
+        fecha: new Date(),
+        productos: [{ nombre: 'heladera' }, { nombre: 'heladera2' }, { nombre: 'heladera3' }]
+    };
     carrito.save(carritoSaved)
     let carritoLista = await carrito.getAll();
     console.log(carritoLista);
-    res.render('carrito',{carrito :carritoLista});
+    res.render('pages/carrito', { carrito: carritoLista, user: req.user });
 }
 
-async function getProductos(req, res){
- producto.save({nombre:"Heladera",precio:123,url: "notFound",fecha:new Date()})
-    let lista= await producto.getAll()
-    await console.log(lista);
-    
-    //res.send(lista)
-   res.render('productos',{productos:lista,listExists:true});
+async function getProductos(req, res) {
+
+    let lista = await producto.getAll()
+
+    res.render('pages/productos', { productos: lista, listExists: true, user: req.user });
+}
+function postProducto(req, res) {
+  producto.save(req.body);
+    res.redirect('/productos');
 }
 
-async function addProductoCarrito(req, res){
-    let id= req.params.id; 
-            carrito.AddProdCarrito(id,obj)
-            window.alert('Producto agregado')
-            res.redirect("/productos");}
-    
+async function addProductoCarrito(req, res) {
+    //let id = req.params.id;
+    let id = '6332860f90b6ff2b99a1b90c' ;
+    //console.log(req.params.producto);
+    carrito.addProductoCarrito(id, req.params.producto)
+  
+   res.redirect("/productos");
+}
+
 
 module.exports = {
     getRoot,
@@ -218,8 +212,9 @@ module.exports = {
     getProfile,
     getTwitterPage,
     getInfo,
-    getRandoms,
     getProductos,
     getCarrito,
-    addProductoCarrito
+    addProductoCarrito,
+    postProducto,
+
 }

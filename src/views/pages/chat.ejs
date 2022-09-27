@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+  <body>
+    <header></header>
+    <%- include('../partials/nav'); %>
+
+    <div>
+      <div class="container">
+        <h2>Centro de mensajes</h2>
+        <form onsubmit="return addMessage(this)">
+          <input type="text" id="username" placeholder="Tu nombre" required />
+          <br />
+          <div id="messages"></div>
+          <input type="text" id="texto" placeholder="Deja tu mensaje!" />
+          <input type="submit" value="Enviar" />
+        </form>
+      </div>
+    </div>
+
+    <script>
+      const socket =io.connect();
+
+
+           function renderMsj(data){
+
+               console.log('aca??')
+               const html = data.map((elem,index)=> {
+                   return ('<div><strong style="color:blue;" >' + elem.author +'</strong>: <em style="color:#7D6608" >[ ' + elem.date + ']</em><i style="color:#087D18">'+ elem.text +'</i></div>')
+               }).join(" ");
+               document.getElementById('messages').innerHTML = html;
+               }
+
+               socket.on('messages',data=>
+                   {renderMsj(data);
+                   });
+
+               function addMessage(e){
+                   
+                   const mensaje = {
+                       author : document.getElementById('username').value,
+                       date : new Date().toDateString(),
+                       text: document.getElementById('texto').value
+                   };
+                   socket.emit('new-message',mensaje);
+                   return false
+                  }
+    </script>
+  </body>
+</html>

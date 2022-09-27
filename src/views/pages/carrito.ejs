@@ -2,16 +2,12 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    {{!-- <script src="../../server.js"></script> --}}
+    <%- include('../partials/head'); %>
 </head>
 
 <body>
-    {{>nav}}
-    {{!-- {{#if isUser}} --}}
+    <%- include('../partials/nav'); %>
+
 
     <h2>Mi carrito</h2>
     <table class="table">
@@ -21,20 +17,21 @@
                 <th scope="col">Producto</th>
                 <th scope="col">Precio</th>
                 <th scope="col">Link</th>
+                <th scope="col"></th>
             </tr>
         </thead>
          <tbody>
-            {{#each carrito}} 
+            <% carrito.forEach(function(carrito) { %>
             <tr>
-                <td>{{this.nombre}}</td>
-                <td>{{this.fecha}}</td> 
-                <td>{{this.productos}}</td>
+                <td><%=carrito.nombre%> 1</td>
+                <td><%=carrito.fecha%>2</td> 
+                <td><%=carrito.productos%>3</td>
             </tr>
-            {{/each}}
+            <% }); %>
         </tbody>
       
     </table>
-    {{!-- {{/if}} --}}
+
       <form action="/sendWhatsApp" method="get">
         <div class="text-center">
         <button class="btn btn-danger my-5">Iniciar pedido</button>

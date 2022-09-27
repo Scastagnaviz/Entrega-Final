@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %>
+</head>
+<body>
+  <%- include('../partials/nav'); %>
+
+
+    <h2>Lista de productos</h2>
+    <div id="productos">
+      <table class="table table-info table-striped" >
+                <thead>
+                    <tr>
+                    <th scope="row">Producto</th>
+                    <th scope="row">Precio</th>
+                    <th scope="row">Imagen</th>
+                    </tr>
+                </thead>
+                
+               <tbody>     
+                <% if (productos.length == 0) { %>
+    
+                    <h5 class="alert-danger rounded p-2">No se encontraron datos</h5>
+                  
+                    <% } else { %>
+        <% productos.forEach(function(producto) { %>
+            <tr>   
+                <td><%= producto.nombre%></td>
+                <td><%= producto.precio%></td>
+                <td> <img src="<%= producto.url%>" alt="noImg"> </td> 
+                <td><a href="/productos/addToCarrito/<%= producto%>" class="btnbtn-danger float-right">Agregar a carrito</a></td>
+            </tr>
+            
+            <% }); %>
+            <% }; %>
+                </tbody>
+    </table>
+    
+    </div>
+
+</body>
+</html>
+
+<!-- 
+<form action="/productos/addToCarrito:" method="get">
+    <div class="text-center">
+    <button class="btn btn-danger my-5">Agregar a carrito</button>
+    </div>
+    </form> -->
